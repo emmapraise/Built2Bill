@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Ml Flask</title>
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename= 'css/style.css')}}">
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename= 'css/bootstrap.css')}}">
+	<script type="text/javascript">
+		var chars = document.getElementByClass('box');
+		var sendbtn = document.getElementByClass('btn-lg');
+		chars.onchange = function(){
+			sendbtn.disabled = false;
+		}
+	</script>
+</head>
+<body>
+
+		<!-- <div align="center" class="bg-info">
+	<h1>Spam detector for Youtube comments</h1></div> --><br>
+	<div class="container">
+		<form action="{{url_for('predict')}}" method="POST" enctype="multipart/form-data">
+		<div class="row">
+			<div class="col-lg-6">
+				<h3>Kindly upload your sketch</h3>
+
+			 <input type="file" name="file" enctype='multipart/form-data' accept="image/*">
+			</div>
+			<div class="col-lg-6">
+				<!-- <h3>Kindly Choose a Model</h3>
+
+				<input type="submit" name="SVM" value="SVM" class="btn btn-info btn-lg btn-block" disabled id='hello'>
+				<input type="submit" name="DTC" value="DTC" class="btn btn-info btn-lg btn-block" disabled> -->
+				<input type="submit" name="ANN" value="Get result" class="btn btn-info btn-lg btn-block">
+			</div>
+		</div>
+
+
+			<!-- <input type="submit" name="" value="Predict" class="btn btn-info"> -->
+		</form>
+	</div>
+
+</body>
+ <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+</html>
