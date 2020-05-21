@@ -15,9 +15,50 @@ import urllib.request
 
 from google.cloud import storage
 
-storage_client =storage.Client.from_service_account_json('Built2bill-ea533c3e831e.json') #
+storage_client =storage.Client() #.from_service_account_json('Built2bill-ea533c3e831e.json') #
 
 app = Flask(__name__)
+
+def upload_to_bucket(file):
+    """
+	Args:
+	Image file needed to be uploaded 
+
+	returns:
+	The links to the uploaded image from the bucket 
+	"""
+    destination_blob_name = secure_filename(file.filename)
+	bucket = storage_client.get_bucket(bucket_name)
+	blob = bucket.blob(destination_blob_name)
+
+	blob.upload_from_string(file.read(), content_type=file.content_type)
+	blob.make_public()
+	p_url=blob.public_url
+	uri = "gs://%s/%s" % (bucket_name, destination_blob_name)
+
+	return p_url
+
+def count_lines(p_url):
+    """
+	Args:
+	The url of the image from the upload bucket
+
+	Return:
+	The number of lines counted from the image
+	"""
+	resp = urllib.request.urlopen(p_url)
+	image = np.asarray(bytearray(resp.read()), dtype="uint8")
+	imge = cv2.imdecode(image, -1)
+	blur = cv2.blur(imge,(5,5))
+	gray = cv2.cvtColor(blur, cv2.COLOR_BGR2GRAY)
+	edges = cv2.Canny(gray, 75, 150)
+	lines = cv2.HoughLinesP(edges, 1, np.pi/180, 30, maxLineGap=250)
+	for line in lines:
+  		x1, y1, x2, y2 = line[0]
+  		cv2.line(image, (x1, y1), (x2, y2), (0, 255, 0), 3)
+	pred_value = len(lines)
+	
+	return pred_value
 
 @app.route('/')
 def home():
@@ -33,32 +74,13 @@ def onepage():
 
 @app.route('/about', methods = ['POST'])
 def predict():
-# # #
+
 	bucket_name = "built2bill-upload"
 	file = request.files['file']
+	get_image = upload_to_bucket(file)
 
-	destination_blob_name = secure_filename(file.filename)
-	bucket = storage_client.get_bucket(bucket_name)
-	blob = bucket.blob(destination_blob_name)
+	lines = count_lines(get_image)
+	return render_template('aboutus.html', prediction = lines)
 
-	blob.upload_from_string(file.read(), content_type=file.content_type)
-	blob.make_public()
-	p_url=blob.public_url
-	uri = "gs://%s/%s" % (bucket_name, destination_blob_name)
-	#
-	resp = urllib.request.urlopen(p_url)
-	image = np.asarray(bytearray(resp.read()), dtype="uint8")
-	imge = cv2.imdecode(image, -1)
-	blur = cv2.blur(imge,(5,5))
-	gray = cv2.cvtColor(blur, cv2.COLOR_BGR2GRAY)
-	edges = cv2.Canny(gray, 75, 150)
-	lines = cv2.HoughLinesP(edges, 1, np.pi/180, 30, maxLineGap=250)
-	for line in lines:
-  		x1, y1, x2, y2 = line[0]
-  		cv2.line(image, (x1, y1), (x2, y2), (0, 255, 0), 3)
-	pred_value = len(lines)
-	
-	return render_template('aboutus.html', prediction = pred_value)
-#
 if __name__ == '__main__':
 	app.run(debug=True)
