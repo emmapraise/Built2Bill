@@ -16,30 +16,9 @@ import urllib.request
 from google.cloud import storage
 
 storage_client =storage.Client.from_service_account_json('Built2bill-ea533c3e831e.json') #
-# def upload_blob(source_file_name):
-#     # """Uploads a file to the bucket."""
-#     bucket_name = "built2bill-upload"
-#     # source_file_name = "ue.jpeg"
-#     destination_blob_name = source_file_name
-#         #
-#     storage_client =storage.Client() #'Built2bill-ea533c3e831e.json'
-#     bucket = storage_client.get_bucket(bucket_name)
-#     blob = bucket.blob(destination_blob_name)
-#     blob.upload_from_filename(source_file_name, content_type='image/jpeg')
-#     # blob.make_public()
-#     uri = "gs://%s/%s" % (bucket_name, destination_blob_name)
-#     return uri
 
-
-
-# UPLOAD_FOLDER = 'upload'
-# ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 app = Flask(__name__)
-# app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
-# def allowed_file(filename):
-#     return '.' in filename and \
-#            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 @app.route('/')
 def home():
 	return render_template('index.html')
