@@ -15,31 +15,32 @@ import urllib.request
 
 from google.cloud import storage
 
-storage_client =storage.Client() #.from_service_account_json('Built2bill-ea533c3e831e.json') #
+storage_client =storage.Client.from_service_account_json('Built2bill-ea533c3e831e.json') #
 
 app = Flask(__name__)
 
-def upload_to_bucket(file):
-    """
-	Args:
-	Image file needed to be uploaded 
-
-	returns:
-	The links to the uploaded image from the bucket 
+def upload_to_bucket(file, bucket_name):
 	"""
-    destination_blob_name = secure_filename(file.filename)
+	Args:
+	This accept and image as an input and the name of the bucket to upload the image into
+
+	Return:
+	It returns the public url to access the image saved in the bucket.
+
+	"""
+	destination_blob_name = secure_filename(file.filename)
 	bucket = storage_client.get_bucket(bucket_name)
 	blob = bucket.blob(destination_blob_name)
 
 	blob.upload_from_string(file.read(), content_type=file.content_type)
 	blob.make_public()
 	p_url=blob.public_url
-	uri = "gs://%s/%s" % (bucket_name, destination_blob_name)
+	# uri = 'gs://%s/%s' % (bucket_name, destination_blob_name)
 
 	return p_url
 
 def count_lines(p_url):
-    """
+	"""
 	Args:
 	The url of the image from the upload bucket
 
@@ -77,7 +78,7 @@ def predict():
 
 	bucket_name = "built2bill-upload"
 	file = request.files['file']
-	get_image = upload_to_bucket(file)
+	get_image = upload_to_bucket(file, bucket_name)
 
 	lines = count_lines(get_image)
 	return render_template('aboutus.html', prediction = lines)
