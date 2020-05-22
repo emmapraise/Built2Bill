@@ -21,10 +21,16 @@ app = Flask(__name__)
 
 def upload_to_bucket(file, bucket_name):
 	"""
-	Args:
-	This accept and image as an input and the name of the bucket to upload the image into
+	input
+	------
+	file:
+	The image to be uploaded.
 
-	Return:
+	bucket_name:
+	The name of the bucket which the image will be uploaded into.
+
+	Return
+	-------
 	It returns the public url to access the image saved in the bucket.
 
 	"""
@@ -41,10 +47,12 @@ def upload_to_bucket(file, bucket_name):
 
 def count_lines(p_url):
 	"""
-	Args:
-	The url of the image from the upload bucket
+	p_url
+	-----
+	The public url of the image from the upload bucket
 
-	Return:
+	Return
+	---------
 	The number of lines counted from the image
 	"""
 	resp = urllib.request.urlopen(p_url)
