@@ -8,4 +8,3 @@ numpy==1.18.1
 opencv-python==4.1.2.30
 google==2.0.3
 Werkzeug==0.16.0
-opencv-python
