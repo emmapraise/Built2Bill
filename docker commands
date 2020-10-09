@@ -14,3 +14,9 @@ curl -d '{"instances": [1.0, 2.0, 5.0]}' \
     -X POST http://localhost:8501/v1/models/half_plus_two:predict
 
 curl http://localhost:8501/v1/models/half_plus_two
+
+model_server --rest_api_port=8501 \
+  --model_name=half_plus_two --model_base_path=/models/half_plus_two
+
+tools/run_in_docker.sh -d tensorflow/serving:1.15-devel \
+  bazel build tensorflow_serving/...

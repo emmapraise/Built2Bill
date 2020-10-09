@@ -13,9 +13,9 @@ import urllib.request
 # from sklearn.externals import joblib
 # from keras.models import model_from_json
 
-from google.cloud import storage
+# from google.cloud import storage
 
-storage_client =storage.Client.from_service_account_json('Built2bill-ea533c3e831e.json') #
+# storage_client =storage.Client.from_service_account_json('Built2bill-ea533c3e831e.json') #
 
 app = Flask(__name__)
 
@@ -86,9 +86,9 @@ def predict():
 
 	bucket_name = "built2bill-upload"
 	file = request.files['file']
-	get_image = upload_to_bucket(file, bucket_name)
+	# get_image = upload_to_bucket(file, bucket_name)
 
-	lines = count_lines(get_image)
+	lines = count_lines(file)
 	return render_template('aboutus.html', prediction = lines)
 
 if __name__ == '__main__':
