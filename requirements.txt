@@ -5,7 +5,7 @@ itsdangerous==1.1.0
 Jinja2==2.11.3
 MarkupSafe==1.1.1
 numpy==1.18.1
-opencv-python==4.1.2.30
+opencv-python==4.2.0.32
 google==2.0.3
 google-cloud-storage
 Werkzeug==0.16.0
